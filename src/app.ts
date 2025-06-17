@@ -12,5 +12,4 @@ app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
   console.error(err);
   res.status(500).json({ message: "Internal server error" });
 });
-
-  export default app;
+export default app;

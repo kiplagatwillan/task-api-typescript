@@ -1,20 +1,17 @@
-import { PrismaClient } from '@prisma/client';
-
+import { PrismaClient } from '.prisma/client'
 const prisma = new PrismaClient();
 
-export const getAllTasks = async () => {
+export const getAllTasks = async() =>{
   return await prisma.task.findMany();
 };
-
-export const getTaskById = async (id: string) => {
+export const getTaskById = async(id: string) => {
   return await prisma.task.findUnique({
     where: { id }
   });
 };
-
 export const createTask = async (title: string, description: string) => {
   return await prisma.task.create({
-    data: { title, description }
+    data: {title, description }
   });
 };
 
@@ -27,7 +24,6 @@ export const updateTask = async (
     data
   });
 };
-
 export const deleteTask = async (id: string) => {
   return await prisma.task.delete({
     where: { id }
