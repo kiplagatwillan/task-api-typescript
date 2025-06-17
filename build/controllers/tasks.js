@@ -1,31 +1,22 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteTask = exports.updateTask = exports.createTask = exports.getTaskById = exports.getAllTasks = void 0;
 const client_1 = require(".prisma/client");
 const prisma = new client_1.PrismaClient();
-const getAllTasks = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const getAllTasks = async (req, res) => {
     try {
-        const tasks = yield prisma.task.findMany();
+        const tasks = await prisma.task.findMany();
         res.status(200).json(tasks);
     }
     catch (e) {
         res.status(500).json({ message: "Internal server error" });
     }
-});
+};
 exports.getAllTasks = getAllTasks;
-const getTaskById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const getTaskById = async (req, res) => {
     try {
         const { id } = req.params;
-        const task = yield prisma.task.findUnique({
+        const task = await prisma.task.findUnique({
             where: { id }
         });
         if (!task) {
@@ -37,16 +28,16 @@ const getTaskById = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     catch (e) {
         res.status(500).json({ message: "Internal server error" });
     }
-});
+};
 exports.getTaskById = getTaskById;
-const createTask = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const createTask = async (req, res) => {
     try {
         const { title, description } = req.body;
         if (!title) {
             res.status(400).json({ message: "Title is required" });
             return;
         }
-        const newTask = yield prisma.task.create({
+        const newTask = await prisma.task.create({
             data: {
                 title,
                 description: description || ""
@@ -57,13 +48,13 @@ const createTask = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     catch (e) {
         res.status(500).json({ message: "Internal server error" });
     }
-});
+};
 exports.createTask = createTask;
-const updateTask = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const updateTask = async (req, res) => {
     try {
         const { id } = req.params;
         const { title, description, isComplete } = req.body;
-        const updatedTask = yield prisma.task.update({
+        const updatedTask = await prisma.task.update({
             where: { id },
             data: {
                 title,
@@ -81,12 +72,12 @@ const updateTask = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
             res.status(500).json({ message: "Internal server error" });
         }
     }
-});
+};
 exports.updateTask = updateTask;
-const deleteTask = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const deleteTask = async (req, res) => {
     try {
         const { id } = req.params;
-        yield prisma.task.delete({
+        await prisma.task.delete({
             where: { id }
         });
         res.status(204).send();
@@ -99,5 +90,5 @@ const deleteTask = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
             res.status(500).json({ message: "Internal server error" });
         }
     }
-});
+};
 exports.deleteTask = deleteTask;
